@@ -17,7 +17,11 @@ class ChatWidget extends StatelessWidget {
               children: [
                 Image.asset(
                   AssetsManager.userImage,
-                )
+                  height: 30,
+                  width: 30,
+                ),
+                Text("Here will be the message", sty
+                ),
               ],
             ),
           ),
