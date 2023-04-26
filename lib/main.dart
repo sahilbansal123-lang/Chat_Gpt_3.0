@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'constants/constants.dart';
 import 'screens/chat_screen.dart';
 
