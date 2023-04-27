@@ -4,7 +4,6 @@ import 'package:chatgpt_course/constants/constants.dart';
 import 'package:chatgpt_course/services/api_services.dart';
 import 'package:chatgpt_course/services/services.dart';
 import 'package:chatgpt_course/widgets/chat_widget.dart';
-import 'package:chatgpt_course/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
@@ -23,16 +22,19 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   bool _isTyping = false;
   late TextEditingController textEditingController;
+  late FocusNode focusNode;
 
   @override
   void initState() {
     textEditingController = TextEditingController();
+    focusNode = FocusNode();
     super.initState();
   }
 
   @override
   void dispose() {
     textEditingController.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
@@ -92,6 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: [
                       Expanded(
                         child: TextField(
+                          focusNode: focusNode,
                           style: const TextStyle(color: Colors.white),
                           controller: textEditingController,
                           onSubmitted: (value) async {
@@ -133,14 +136,15 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       setState(() {
         _isTyping = true;
+        chatList.add(ChatModel(chatIndex: 0, msg: textEditingController.text));
+        textEditingController.clear();
+        focusNode.unfocus();
       });
-      chatList = await ApiService.sendMessage(
-          message: textEditingController.text,
-          modelId: modelProvider.getCurrentModel,
-      );
-      setState(() {
-
-      });
+      chatList.addAll(await ApiService.sendMessage(
+        message: textEditingController.text,
+        modelId: modelProvider.getCurrentModel,
+      ),);
+      setState(() {});
     } catch (error) {
       log("error $error");
     } finally {
