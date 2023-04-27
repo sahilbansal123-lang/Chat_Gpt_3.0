@@ -7,6 +7,8 @@ import 'package:chatgpt_course/widgets/chat_widget.dart';
 import 'package:chatgpt_course/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
+import '../providers/models_provider.dart';
 import '../services/assets_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -35,6 +37,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final modelsProvider = Provider.of<ModelProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -101,9 +105,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       IconButton(
                           onPressed: () async {
                             try {
-                              ApiService.getModels();
+                              await ApiService.sendMessage(message: textEditingController.text, modelId: modelsProvider.getCurrentModel);
                             } catch (error) {
-                              print("error $error");
+                              log("error $error");
                             }
                           },
                           icon: const Icon(

@@ -23,7 +23,7 @@ class ApiService {
       List temp = [];
       for (var value in jsonResponse["data"]) {
         temp.add(value);
-        log("temp ${value["id"]}");
+        // log("temp ${value["id"]}");
       }
       return ModelsModel.modelFromSnapshot(temp);
     } catch (error) {
@@ -31,6 +31,41 @@ class ApiService {
       rethrow;
     }
   }
+
+  // Send Message fct
+
+  static Future<void> sendMessage(
+      {required String message, required String modelId}) async {
+    try {
+      var response = await http.post(
+        Uri.parse("$BASE_URL/completions"),
+        headers: {
+          'Authorization': 'Bearer $API_KEY',
+          "Content-Type" : "application/json"
+        },
+
+        body: jsonEncode({
+          "model" : modelId,
+          "prompt" : message,
+          "max_tokens" : 200,
+        })
+      );
+
+      Map jsonResponse = jsonDecode(response.body);
+
+      if (jsonResponse['error'] != null) {
+        // print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
+        throw HttpException(jsonResponse['error']["message"]);
+      }
+      if(jsonResponse["choices"].length > 0 ) {
+        log("jsonResponse[choices]text ${jsonResponse["choices"]["text"]}");
+      }
+    } catch (error) {
+      log("error $error");
+      rethrow;
+    }
+  }
+
 }
 
 
