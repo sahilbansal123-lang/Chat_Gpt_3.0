@@ -147,16 +147,27 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Future<void> sendMessageFCT ({required ModelProvider modelProvider, required ChatProvider chatProvider}) async {
+  Future<void> sendMessageFCT ({
+    required ModelProvider modelProvider,
+    required ChatProvider chatProvider
+  }) async {
+    if(textEditingController.text.isEmpty){
+      return;
+    }
     try {
+      String msg = textEditingController.text;
       setState(() {
         _isTyping = true;
-        chatProvider.addUserMessage(msg: textEditingController.text);
+        chatProvider.addUserMessage(msg: msg);
         // chatList.add(ChatModel(chatIndex: 0, msg: textEditingController.text));
         textEditingController.clear();
         focusNode.unfocus();
       });
-      await chatProvider.sendMessageAndGetAnswers(msg: textEditingController.text, chosenModelId: modelProvider.getCurrentModel);
+      await chatProvider.sendMessageAndGetAnswers(
+          msg: msg,
+          chosenModelId: modelProvider.getCurrentModel
+      );
+
       // chatList.addAll(await ApiService.sendMessage(
       //   message: textEditingController.text,
       //   modelId: modelProvider.getCurrentModel,
@@ -164,7 +175,13 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {});
     } catch (error) {
       log("error $error");
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: TextWidget(label: error.toString(),), backgroundColor: Colors.red,));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: TextWidget(
+              label: error.toString(),
+            ),
+            backgroundColor: Colors.red,
+          ));
     } finally {
       setState(() {
         scrollListToEnd();
