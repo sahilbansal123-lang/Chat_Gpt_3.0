@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:chatgpt_course/constants/constants.dart';
 import 'package:chatgpt_course/services/assets_manager.dart';
 import 'package:chatgpt_course/widgets/text_widget.dart';
@@ -27,8 +28,15 @@ class ChatWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 10,),
                 Expanded(
-                    child: TextWidget(
+                    child: chatIndex == 0
+                    ?TextWidget(
                         label: msg,
+                    ) : AnimatedTextKit(
+                        animatedTexts: [
+                          TyperAnimatedText(
+                              msg.trim()
+                          )
+                        ]
                     ),
                 ),
                 chatIndex == 0 ? const SizedBox.shrink()
