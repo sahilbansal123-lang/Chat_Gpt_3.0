@@ -31,12 +31,24 @@ class ChatWidget extends StatelessWidget {
                     child: chatIndex == 0
                     ?TextWidget(
                         label: msg,
-                    ) : AnimatedTextKit(
-                        animatedTexts: [
-                          TyperAnimatedText(
-                              msg.trim()
-                          )
-                        ]
+                    ) : DefaultTextStyle(
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16
+                          ),
+                      child: AnimatedTextKit(
+
+                        isRepeatingAnimation: false,
+                          repeatForever: false,
+                          displayFullTextOnTap: true,
+                          totalRepeatCount: 1,
+                          animatedTexts: [
+                            TyperAnimatedText(
+                                msg.trim()
+                            )
+                          ]
+                      ),
                     ),
                 ),
                 chatIndex == 0 ? const SizedBox.shrink()
